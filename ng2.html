@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/angular.js/1.6.6/angular.min.js"></script>
+</head>
+
+<body>
+    <div ng-app="myApp" ng-controller="namesCtrl">
+        <p>过滤输出</p>
+        <p>
+            <input type="text" ng-model="test">
+        </p>
+        <ul>
+            <li ng-repeat="x in names | filter:test |orderBy:'country'">
+                {{(x.name|uppercase)+','+ x.country}}
+            </li>
+        </ul>
+        {{1490161945000 | date:"yyyy-MM-dd HH:mm:ss"}} 姓名: {{ msg | reverse }}
+        <h1>{{myWelcome}}</h1>
+        <h1>{{theTime}}</h1>
+    </div>
+    <script>
+        angular.module('myApp', [])
+            .controller('namesCtrl', function ($scope, $http, $timeout,$interval) {
+                $scope.msg = "Runoob";
+                $scope.names = [
+                    { name: 'jani', country: 'norway' },
+                    { name: 'hege', country: 'sweden' },
+                    { name: 'kai', country: 'denmark' },
+                    { name: 'init', country: 'rb' },
+                    { name: 'iok', country: 'dd' }
+                ];
+                $http.get("welcome.htm").then(function (response) {
+                    $scope.myWelcome = response.data;
+                })
+                $timeout(function () {
+                    $scope.msg = "How are you today?";
+                }, 2000);
+                $interval(function () {
+                    $scope.theTime = new Date().toLocaleTimeString();
+                }, 1000);
+            }).filter('reverse', function () {//可以注入
+                return function (text) {
+                    return text.split("").reverse().join("");
+                }
+            })
+    </script>
+</body>
+
+</html>

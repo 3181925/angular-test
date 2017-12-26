@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/angular.js/1.6.6/angular.min.js"></script>
+</head>
+<body>
+    <div ng-app="myapp" ng-controller="select"  ng-init="count = 0">
+        <select ng-model="selectdata" ng-options="x for (x, y) in datas">
+        </select>
+        <h1>你的选择是：<br>
+        {{selectdata.url}}
+        </h1>
+        <button type="button" ng-click="count = count+1">点击+1</button>
+        <button ng-click="toggle()">{{text}}</button>
+    <p ng-hide="myVar">{{count}}</p>
+    </div>
+    
+    <script>
+    angular.module('myapp',[])
+    .controller('select',function($scope){
+        $scope.text='点击消失';
+        $scope.datas={
+        1 :{data:"Google", url : "http://www.google.com"},
+	    car02 :{data: "Runoob", url : "http://www.runoob.com"},
+	    3 :{data:"Taobao", url : "http://www.taobao.com"}
+        }
+        $scope.toggle=function(){
+            $scope.myVar = !$scope.myVar;
+            $scope.text = $scope.myVar ? '点击可见' : '点击消失';
+        }
+        $scope.selectdata = $scope.datas.car02;
+    })
+    </script>
+</body>
+</html>

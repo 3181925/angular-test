@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <script src="https://cdn.bootcss.com/angular.js/1.6.6/angular.min.js"></script>
+    <style>
+        input.ng-invalid {
+            background-color: lightblue;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- #deom1 -->
+    <div ng-app="myApp" ng-init="firtstname='init'" ng-controller="myCtrl">
+        <p>姓名：
+            <input type="text" ng-model="name">
+        </p>
+        <h1>{{greeting}}</h1>
+        <button ng-click='sayHello()'>点我</button>
+        <p>
+            <span ng-bind="firtstname"></span>
+        </p>
+        <p>我的第一个表达式：{{5+5}}</p>
+        名：
+        <input type="text" ng-model="firstName">
+        <br> 姓：
+        <input type="text" ng-model="lastName">
+        <br>
+        <br> 姓名：{{firstName + ''+ lastName}}
+
+        <form name="myForm" ng-init="myText = 'test@runoob.com'">
+            Email:
+            <input type="email" name="myAddress" ng-model="myText" required>
+            <!-- <span ng-show="myForm.myAddress.$error.email">不是一个合法的邮箱指令</span> -->
+            <p>编辑邮箱地址，查看状态的改变。</p>
+            <h1>状态</h1>
+            <p>Valid: {{myForm.myAddress.$valid}} (如果输入的值是合法的则为 true)。</p>
+            <p>Dirty: {{myForm.myAddress.$dirty}} (如果值改变则为 true)。</p>
+            <p>Touched: {{myForm.myAddress.$touched}} (如果通过触屏点击则为 true)。</p>
+        </form>
+        输入你的名字:
+        <input name="myAddress" ng-model="text" required>
+        <!-- ng-valid: 验证通过
+ng-invalid: 验证失败
+ng-valid-[key]: 由$setValidity添加的所有验证通过的值
+ng-invalid-[key]: 由$setValidity添加的所有验证失败的值
+ng-pristine: 控件为初始状态
+ng-dirty: 控件输入值已变更
+ng-touched: 控件已失去焦点
+ng-untouched: 控件未失去焦点
+ng-pending: 任何为满足$asyncValidators的情况 -->
+    </div>
+    <!-- #endregion deom1 -->
+
+    <!-- #region deom2-->
+    <div id="myApp2" ng-app="myApp2">
+        <runoob-directive></runoob-directive>
+    </div>
+    <!-- #endregion deom2-->
+
+    <!-- #region deom3-->
+    <div id="myApp3" ng-app="myAPP3" ng-controller="son">
+        姓名：
+        <input type="text" ng-model="name">
+        <br>
+        <first></first>
+        <second></second>
+    </div>
+    <!-- #endregion deom3-->
+
+
+    <!-- #region  deom4-->
+
+    <div ng-controller="myContrl4" id="myApp4">
+        <h1>{{ }} 家族成员</h1>
+        <ul>
+            <li ng-repeat="x in names track by $index">
+                {{x}}.{{lastname}}
+                <button ng-click="delPerson($index)">删除</button>
+            </li>
+        </ul>
+        <p>添加成员：
+            <input type="text" ng-model="name" placeholder="请输入需要添加的成员的名字">
+        </p>
+        <button ng-click="addPerson(name)">确定添加</button>
+    </div>
+    <!-- #endregion  deom4-->
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function ($scope) {
+            $scope.firstName = "inits  ";
+            $scope.lastName = "son";
+            $scope.name = '123';
+            $scope.sayHello = function () {
+                $scope.greeting = 'Hello ' + $scope.name + '!';
+            }
+        })
+
+        var app2 = angular.module('myApp2', []);
+        app2.directive("runoobDirective", function () {
+            return {
+                template: "<h1>自定义指令!</h1>"
+            };
+        });
+        angular.module('myApp3', []).directive('first', [function () {
+            return {
+                //  scope:false,//默认值为false,共享父作用域 值为true时共享父级作用域并创建指令自己的
+                //  controllter:function($scope,$element,$attrs,$transclude){},//作用域 值为{}创建全新的隔离作用域，值为string时为控制器名称
+                restrict: 'AE',//E = Element A = Attribute C= class M = Comment
+                template: 'first name:{{name}}', // 值为string，function用于显示dom元素
+                //  templateUrl:'xxx.html', //值为string, function 以id为xxx.html 为调用文件显示
+                //  prioruty:0,//指明指令的优先级，若在dom上有多个指令，有先执行指令等级高的指令
+                //  replace:false,//默认为false，当为true时直接替换指令所在的标签
+                //  terminal:true,//值为true时优先级低于此指令的其他指令无效
+                //  link:function //值为函数，用来定义指令行为从传入的参数中获取元素并进行处理
+            };
+        }]).directive('second', [function () {
+            return {
+                scope: {},//创建指令自己的独立作用域，与父级毫无关系
+                controller: function ($scope) {
+                    $scope.name = 'son';
+                },
+                restrict: 'AE',//E = Element A = Attribute C= class M = Comment
+                //当修改这里的name时，second会在自己的作用域中新建一个name变量，与父级作用域中的
+                // name相对独立，所以再修改父级中的name对second中的name就不会有影响了
+                template: 'second name:{{name}}'
+
+            };
+        }]).controller('son', ['$scope', function ($scope) {
+            $scope.name = 'son'
+        }])
+
+
+
+        angular.module('myapp4', [])
+            .controller('myContrl4', function ($scope, $rootScope) {
+                // $rootScope 根作用域，在素有的控制器中都可以用            
+                $scope.name = '';
+                $scope.names = ["name1", "name2", "name3", "name4", "name4"];
+                $scope.sayHellow = function () {
+                    $scope.greeting = "Hello," + $scope.name + "!";
+                }
+
+                $scope.delPerson = function (index) {
+                    // 将点击删除的对象从数组中移除，angular会自动更新列表
+                    $scope.names.splice(index, 1);
+                }
+                $scope.addPerson = function (name) {
+                    // 输入的对象添加到数组，angular会自动更新列表               
+                    $scope.names.push(name);
+                }
+
+                $rootScope.lastname = "Refsnes";
+            })
+        //手动加载myApp2 ng-app
+        angular.bootstrap(document.getElementById("myApp2"), ['myApp2']);
+        angular.bootstrap(document.getElementById("myApp3"), ['myApp3']);
+        angular.bootstrap(document.getElementById("myApp4"), ['myapp4'])
+    </script>
+</body>
+
+</html>
